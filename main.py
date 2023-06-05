@@ -83,7 +83,7 @@ age_model.save('age_model_50epochs.h5')
 
 history = history_age
 
-# #plot the training and validation accuracy and loss at each epoch
+# Plot the training and validation accuracy and loss at each epoch
 loss = history.history['loss']
 val_loss = history.history['val_loss']
 epochs = range(1, len(loss) + 1)
