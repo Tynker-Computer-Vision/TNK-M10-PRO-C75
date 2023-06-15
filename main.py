@@ -11,15 +11,15 @@ from cvzone.FaceDetectionModule import FaceDetector
 
 path = "Face-image-dataset"
 images = []
-age = []
+ages = []
 gender = []
 
 detector = FaceDetector()
 
-for img in os.listdir(path):
+for img in os.listdir(path)[:20]:
   print(img)
   if img!='.git':
-    ages = img.split("_")[0]
+    age = img.split("_")[0]
     genders = img.split("_")[1]
     img = cv2.imread(str(path)+"/"+str(img))
     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
@@ -37,15 +37,14 @@ for img in os.listdir(path):
     # images.append(resizedImg)
     
     images.append(img)
-    age.append(ages)
+    ages.append(age)
 
 
-age = np.array(age,dtype=np.int64)
+ages = np.array(ages,dtype=np.int64)
 images = np.array(images)
 
 # Third class
-x_train_age, x_test_age, y_train_age, y_test_age = train_test_split(images, age, random_state=42)
-
+training_images, testing_images, training_ages, testing_ages = train_test_split(images, ages)
 
 
 age_model = Sequential()
@@ -75,8 +74,8 @@ age_model.add(Dense(1, activation='linear', name='age'))
 age_model.compile(optimizer='adam', loss='mse', metrics=['mae'])
 print(age_model.summary()) 
 
-history_age = age_model.fit(x_train_age, y_train_age,
-                        validation_data=(x_test_age, y_test_age), epochs=10)
+history_age = age_model.fit(training_images, training_ages,
+                        validation_data=(testing_images, testing_ages), epochs=10)
 
 age_model.save('age_model_50epochs.h5')
 
